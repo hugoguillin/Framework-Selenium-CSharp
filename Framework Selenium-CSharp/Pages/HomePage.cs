@@ -1,16 +1,23 @@
 ﻿using Framework_Selenium_CSharp.Utils;
+using OpenQA.Selenium;
 using System;
 
 namespace Framework_Selenium_CSharp.Pages
 {
     public class HomePage : BaseComponent
     {
-        private readonly string _openSideMenuButton =           "//button[@id='react-burger-menu-btn']";
-        private readonly string _closeSideMenuButton =          "//button[@id='react-burger-cross-btn']";
-        private readonly string _allItemsLink =                 "//a[@id='inventory_sidebar_link']";
-        private readonly string _firtProductLinkLinkToPage =    "(//div[@class='inventory_item_label'])[1]/a";
-        private readonly string _firstProductButtonAddToCart =  "(//div[@class='inventory_item'])[1]//button";
-        private readonly string _backToProductsListButton =     "//button[@data-test='back-to-products']";
+        private readonly string _openSideMenuButton =       "//button[@id='react-burger-menu-btn']";
+        private readonly string _closeSideMenuButton =      "//button[@id='react-burger-cross-btn']";
+        private readonly string _linkToTShirtPage =         "//div[contains(text(), 'Sauce Labs Bolt T-Shirt')]/ancestor::div[@class='inventory_item_label']//a";
+        private readonly string _tShirtAddToCartButton =    "//div[contains(text(), 'Sauce Labs Bolt T-Shirt')]/ancestor::div[@class='inventory_item_description']//button";
+        private readonly string _backToProductsListButton = "//button[@data-test='back-to-products']";
+        private readonly string _sideMenu =                 "//div[@class='bm-menu-wrap']";
+        private readonly string _cartIcon =                 "//a[@class='shopping_cart_link']";
+
+        public IWebElement SideMenu => test.GetElementByXPath(_sideMenu);
+        public IWebElement AddToCartButton => test.GetElementByXPath(_tShirtAddToCartButton);
+        public IWebElement BacktoProductButton => test.GetElementByXPath(_backToProductsListButton);
+        public IWebElement CartIcon => test.GetElementByXPath(_cartIcon);
 
         public HomePage(BaseTest test) : base(test) { }
 
@@ -28,20 +35,17 @@ namespace Framework_Selenium_CSharp.Pages
 
         public void NavigateToProductPage()
         {
-            test.ClickButtonByXPath(_firtProductLinkLinkToPage);
+            test.ClickButtonByXPath(_linkToTShirtPage);
         }
 
-        public bool IsSideMenuOpen()
+        public void AddProductToCart()
         {
-            try
-            {
-                test.WaitForElementToBeDisplayed(_allItemsLink);
-                return test.GetElementByXPath(_allItemsLink).Displayed;
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
+            test.ClickButtonByXPath(_tShirtAddToCartButton);
+        }
+
+        public void GoToCart()
+        {
+            test.ClickButtonByXPath(_cartIcon);
         }
 
     }

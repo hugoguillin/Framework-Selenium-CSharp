@@ -9,28 +9,23 @@ namespace Framework_Selenium_CSharp
         private const string _validPassword =   "secret_sauce";
         private readonly string _username =     "//input[@data-test='username']";
         private readonly string _password =     "//input[@data-test='password']";
-        private readonly string _loginButton =  "//input[@data-test='login-button']";
 
         public BaseComponent(BaseTest test)
         {
             this.test = test;
         }
 
+        public void AccessInitialPageAndLogin()
+        {
+            test.AccessInitialPage();
+            Login();
+        }
+
         public void Login(string username = _validUsername, string pass = _validPassword)
         {
-            FillUsernameField(username);
-            FillPasswordField(pass);
-            test.ClickButtonByXPath(_loginButton);
-        }
-
-        private void FillUsernameField(string username)
-        {
             test.FillInputTextByXPath(_username, username);
-        }
-
-        private void FillPasswordField(string pass)
-        {
             test.FillInputTextByXPath(_password, pass);
+            test.GetElementByXPath(_password).Submit();
         }
     }
 }
