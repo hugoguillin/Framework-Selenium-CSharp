@@ -1,11 +1,11 @@
 using Framework_Selenium_CSharp.Pages;
-using Framework_Selenium_CSharp.Utils;
+using Framework_Selenium_CSharp.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Framework_Selenium_CSharp
 {
-    public class LoginTest : BaseTest
+    public class LoginTest : BaseFramework
     {
         private readonly string _invalidUsername =  "invalid_user";
         private readonly LoginPage loginpage;

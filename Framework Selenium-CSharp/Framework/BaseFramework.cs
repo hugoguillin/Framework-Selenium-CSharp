@@ -7,21 +7,21 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using Xunit.Abstractions;
 
-namespace Framework_Selenium_CSharp.Utils
+namespace Framework_Selenium_CSharp.Framework
 {
     
-    public class BaseTest : IDisposable
+    public class BaseFramework : IDisposable
     {
         private IWebDriver _driver;
         private readonly ITestOutputHelper _printOutput;
 
         #region Contructor
-        public BaseTest()
+        public BaseFramework()
         {
             InitializeDriver();
         }
 
-        public BaseTest(ITestOutputHelper printOutput) : this() 
+        public BaseFramework(ITestOutputHelper printOutput) : this() 
         {
             _printOutput = printOutput;
         }

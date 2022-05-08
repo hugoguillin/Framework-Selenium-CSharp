@@ -1,11 +1,10 @@
-﻿using Framework_Selenium_CSharp.Utils;
+﻿using Framework_Selenium_CSharp.Framework;
 using OpenQA.Selenium;
 
 namespace Framework_Selenium_CSharp.Pages
 {
     public class OrderPage : BaseComponent
     {
-        private readonly string _removeFromCartButton =   "//button[@data-test='remove-sauce-labs-bolt-t-shirt']";
         private readonly string _checkoutButton =         "//button[@data-test='checkout']";
         private readonly string _firstNameField =         "//input[@data-test='firstName']";
         private readonly string _lastNameField =          "//input[@data-test='lastName']";
@@ -19,10 +18,10 @@ namespace Framework_Selenium_CSharp.Pages
         private readonly HomePage _homePage;
         
 
-        public IWebElement SumaryInfo => test.GetElementByXPath(_sumaryInfoSection);
-        public IWebElement OrderCompletedBanner => test.GetElementByXPath(_checkoutCompleteBanner);
+        public IWebElement SumaryInfo => Base.GetElementByXPath(_sumaryInfoSection);
+        public IWebElement OrderCompletedBanner => Base.GetElementByXPath(_checkoutCompleteBanner);
 
-        public OrderPage(BaseTest test) : base(test)
+        public OrderPage(BaseFramework test) : base(test)
         {
             _homePage = new HomePage(test);
         }
@@ -37,29 +36,29 @@ namespace Framework_Selenium_CSharp.Pages
         {
             _homePage.AddProductToCart();
             _homePage.GoToCart();
-            test.ClickButtonByXPath(_checkoutButton);
+            Base.ClickButtonByXPath(_checkoutButton);
         }
 
         public void FillUserData()
         {
-            test.FillInputTextByXPath(_firstNameField, "random-name");
-            test.FillInputTextByXPath(_lastNameField, "random-last-name");
-            test.FillInputTextByXPath(_zipCodeField, "99999").Submit();
+            Base.FillInputTextByXPath(_firstNameField, "random-name");
+            Base.FillInputTextByXPath(_lastNameField, "random-last-name");
+            Base.FillInputTextByXPath(_zipCodeField, "99999").Submit();
         }
 
         public void ConfirmOrder()
         {
-            test.ClickButtonByXPath(_finishOrderButton);
+            Base.ClickButtonByXPath(_finishOrderButton);
         }
 
         public void CancelOrder()
         {
-            test.ClickButtonByXPath(_cancelOrderButton);
+            Base.ClickButtonByXPath(_cancelOrderButton);
         }
 
         public void GoToMainPage()
         {
-            test.ClickButtonByXPath(_backToHomeButton);
+            Base.ClickButtonByXPath(_backToHomeButton);
         }
 
     }

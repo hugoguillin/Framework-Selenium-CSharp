@@ -1,31 +1,32 @@
-﻿using Framework_Selenium_CSharp.Utils;
+﻿using Framework_Selenium_CSharp.Framework;
 
 namespace Framework_Selenium_CSharp
 {
     public class BaseComponent
     {
-        protected BaseTest test;
         private const string _validUsername =   "standard_user";
         private const string _validPassword =   "secret_sauce";
         private readonly string _username =     "//input[@data-test='username']";
         private readonly string _password =     "//input[@data-test='password']";
 
-        public BaseComponent(BaseTest test)
+        public BaseFramework Base { get; private set; }
+
+        public BaseComponent(BaseFramework baseFramework)
         {
-            this.test = test;
+            Base = baseFramework;
         }
 
         public void AccessInitialPageAndLogin()
         {
-            test.AccessInitialPage();
+            Base.AccessInitialPage();
             Login();
         }
 
         public void Login(string username = _validUsername, string pass = _validPassword)
         {
-            test.FillInputTextByXPath(_username, username);
-            test.FillInputTextByXPath(_password, pass);
-            test.GetElementByXPath(_password).Submit();
+            Base.FillInputTextByXPath(_username, username);
+            Base.FillInputTextByXPath(_password, pass);
+            Base.GetElementByXPath(_password).Submit();
         }
     }
 }

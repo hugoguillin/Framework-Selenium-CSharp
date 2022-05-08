@@ -1,11 +1,11 @@
 ﻿using Framework_Selenium_CSharp.Pages;
-using Framework_Selenium_CSharp.Utils;
+using Framework_Selenium_CSharp.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Framework_Selenium_CSharp.Tests
 {
-    public class HomeTests : BaseTest
+    public class HomeTests : BaseFramework
     {
         private readonly HomePage _homePage;
 
