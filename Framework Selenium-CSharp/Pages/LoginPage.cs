@@ -1,23 +1,19 @@
-﻿using Framework_Selenium_CSharp.Utils;
+﻿using Framework_Selenium_CSharp.Framework;
+using OpenQA.Selenium;
 
 namespace Framework_Selenium_CSharp.Pages
 {
     public class LoginPage : BaseComponent
     {
-        
-        private readonly string _errorMessage = "//h3[@data-test='error']";
+
+        public IWebElement ErrorMessage => Base.GetElementByXPath("//h3[@data-test='error']");
 
 
-        public LoginPage(BaseTest test) : base(test) { }
-
-        public bool ErrorMessageIsVisible()
-        {
-            return test.ErrorOrAlertMessageIsVisible(_errorMessage);
-        }
+        public LoginPage(BaseFramework test) : base(test) { }
 
         public bool VerifySuccessfulLoginAndNavigationToHomePage()
         {
-            return test.UrlContainsText("/inventory.html");
+            return Base.UrlContainsText("/inventory.html");
         }
     }
 }

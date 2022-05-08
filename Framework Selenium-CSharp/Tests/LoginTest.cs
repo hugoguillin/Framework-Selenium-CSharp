@@ -1,42 +1,48 @@
 using Framework_Selenium_CSharp.Pages;
-using Framework_Selenium_CSharp.Utils;
+using Framework_Selenium_CSharp.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Framework_Selenium_CSharp
 {
-    public class LoginTest : BaseTest
+    public class LoginTest : BaseFramework
     {
         private readonly string _invalidUsername =  "invalid_user";
+        private readonly LoginPage loginpage;
 
-        public LoginTest(ITestOutputHelper printOutput) : base(printOutput) { }
-
-        [Fact]
-        public void Login_GivenValidUsernameAndPass_LoginSuccessful()
+        public LoginTest(ITestOutputHelper printOutput) : base(printOutput)
         {
-            var loginPage = new LoginPage(this);
-            this.AccessInitialPage();
-            loginPage.Login();
-            Assert.True(loginPage.VerifySuccessfulLoginAndNavigationToHomePage());
+            loginpage = new LoginPage(this);
         }
 
-        [Fact]
-        public void Login_GivenInvalidUsernameAndValidPass_LoginUnsuccessful()
+        [Theory]
+        [InlineData("standard_user")]
+        [InlineData("problem_user")]
+        [InlineData("performance_glitch_user")]
+        public void Login_GivenValidUsernameAndPass_LoginSuccessful(string username)
         {
-            var loginPage = new LoginPage(this);
-            this.AccessInitialPage();
-            loginPage.Login(_invalidUsername);
-            Assert.True(loginPage.ErrorMessageIsVisible());
+            AccessInitialPage();
+            loginpage.Login(username);
+            Assert.True(loginpage.VerifySuccessfulLoginAndNavigationToHomePage());
+        }
+
+        [Theory]
+        [InlineData("invalid_user")]
+        [InlineData("locked_out_user")]
+        public void Login_GivenInvalidUsernameAndValidPass_LoginUnsuccessful(string invalidusername)
+        {
+            AccessInitialPage();
+            loginpage.Login(invalidusername);
+            Assert.True(loginpage.ErrorMessage.Displayed);
         }
 
         [Fact]
         public void Login_GivenValidUsernameAndPassAfterInvalidLoginAttempt_Login_Successful()
         {
-            var loginPage = new LoginPage(this);
-            this.AccessInitialPage();
-            loginPage.Login(_invalidUsername);
-            loginPage.Login();
-            Assert.True(loginPage.VerifySuccessfulLoginAndNavigationToHomePage());
+            AccessInitialPage();
+            loginpage.Login(_invalidUsername);
+            loginpage.Login();
+            Assert.True(loginpage.VerifySuccessfulLoginAndNavigationToHomePage());
         }
     }
 }

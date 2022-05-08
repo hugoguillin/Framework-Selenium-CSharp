@@ -3,23 +3,25 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
+using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using Xunit.Abstractions;
 
-namespace Framework_Selenium_CSharp.Utils
+namespace Framework_Selenium_CSharp.Framework
 {
-    public class BaseTest : IDisposable
+    
+    public class BaseFramework : IDisposable
     {
         private IWebDriver _driver;
         private readonly ITestOutputHelper _printOutput;
 
         #region Contructor
-        public BaseTest()
+        public BaseFramework()
         {
             InitializeDriver();
         }
 
-        public BaseTest(ITestOutputHelper printOutput) : this() 
+        public BaseFramework(ITestOutputHelper printOutput) : this() 
         {
             _printOutput = printOutput;
         }
@@ -28,66 +30,51 @@ namespace Framework_Selenium_CSharp.Utils
         #region Public Methods
         public IWebElement GetElementByXPath(string xPath)
         {
-            WebDriverWait wait = new(_driver, TimeSpan.FromSeconds(20));
+            WebDriverWait wait = new(_driver, TimeSpan.FromSeconds(7));
             var element = wait.Until(ExpectedConditions.ElementExists(By.XPath(xPath)));
             return element;
         }
 
-        public void FillInputTextByXPath(string xPath, string text)
+        public IWebElement FillInputTextByXPath(string xPath, string text)
         {
+            _printOutput.WriteLine($"Filling the input field '{xPath}' with the text '{text}'");
             var input = GetElementByXPath(xPath);
             input.Clear();
             input.SendKeys(text);
+            return input;
         }
 
         public void ClickButtonByXPath(string xPath)
         {
+            _printOutput.WriteLine($"Clicking the element '{xPath}'");
             var button = GetElementByXPath(xPath);
             button.Click();
         }
 
-        public bool ErrorOrAlertMessageIsVisible(string xPath)
-        {
-            WebDriverWait wait = new(_driver, TimeSpan.FromSeconds(3));
-            try
-            {
-                wait.Until(ExpectedConditions.ElementExists(By.XPath(xPath)));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _printOutput.WriteLine("The error or alert message was not displayed: {0}", ex.ToString());
-            }
-            return false;
-        }
-
         public bool UrlContainsText(string text)
         {
+            _printOutput.WriteLine($"Checking if the url contains the text '{text}'");
             return _driver.Url.Contains(text);
         }
 
         public void AccessInitialPage()
         {
+            _printOutput.WriteLine("Navigating to the login page of the website");
             _driver.Navigate().GoToUrl("https://www.saucedemo.com/");
         }
 
         public void WaitForElementToBeDisplayed(string xPath)
         {
+            _printOutput.WriteLine($"Waiting for element '{xPath}' to be displayed");
             WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
             wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xPath)));
         }
 
         public void WaitForElementToBeHidden(string xPath)
         {
+            _printOutput.WriteLine($"Waiting for element '{xPath}' to be hidden");
             WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
             wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath(xPath)));
-        }
-
-        public T AccessInitialPageAndLogin<T>(T classPage)
-        {
-            AccessInitialPage();
-            new BaseComponent(this).Login();
-            return classPage;
         }
 
         public void Dispose()
@@ -100,7 +87,7 @@ namespace Framework_Selenium_CSharp.Utils
         #region Private methods
         private IWebDriver InitializeDriver()
         {
-            new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+            new DriverManager().SetUpDriver(new ChromeConfig());
             ChromeOptions options = new ChromeOptions();
             options.AddArguments("disable-infobars");
             _driver = new ChromeDriver(options);
